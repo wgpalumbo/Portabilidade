@@ -7,11 +7,18 @@ namespace Portabilidade.Domain.Entities
             this.Nome = nome;
             this.DocumentoCpf = documentoCpf;
             this.Endereco = endereco;
-
+        
         }
         public string Nome { get; private set; }
         public string DocumentoCpf { get; private set; }
         public string Endereco { get; private set; }
 
+        private bool Validate()
+        {
+            
+            return false;
+        }
+
     }
+    
 }
