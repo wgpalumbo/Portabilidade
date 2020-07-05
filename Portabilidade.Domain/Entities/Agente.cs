@@ -2,13 +2,12 @@ namespace Portabilidade.Domain.Entities
 {
     public class Agente
     {
-        public Agente(string codigo, string nome)
+        public Agente(string instituicao, string codigoInvestidor)
         {
-            this.Codigo = codigo;
-            this.Nome = nome;
-
+            this.Instituicao = instituicao;
+            this.CodigoInvestidor = codigoInvestidor;
         }
-        public string Codigo { get; private set; }
-        public string Nome { get; private set; }
+        public string Instituicao { get; private set; }
+        public string CodigoInvestidor { get; private set; }
     }
 }

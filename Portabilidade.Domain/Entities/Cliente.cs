@@ -13,12 +13,6 @@ namespace Portabilidade.Domain.Entities
         public string DocumentoCpf { get; private set; }
         public string Endereco { get; private set; }
 
-        private bool Validate()
-        {
-            
-            return false;
-        }
-
     }
     
 }

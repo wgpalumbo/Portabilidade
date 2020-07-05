@@ -1,4 +1,3 @@
-using System;
 using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Portabilidade.Domain.Entities;
