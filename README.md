@@ -24,6 +24,7 @@ O BD foi um simulado de um List<T>, em memoria.
 
 Instalado o SWAGGER para testes.
 
+#### Para testar entrar no Contexto UI , e executar o Run
 
 Laboratório:
 Simulou-se um simples CRUD para inserir dados do Formulario abaixo:
