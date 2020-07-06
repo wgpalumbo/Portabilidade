@@ -1,0 +1,74 @@
+Usando PostMan
+Incluir nova -> POST , http://localhost:5000/v1/portabilidade , raw , JSON(application/json)
+ 		Body = (( copiar e colar qualquer dos exemplos abaixo ))
+ 		 
+Listar -> GET , http://localhost:5000/v1/portabilidade , Body = JSON
+
+ObterPorId -> 	Headers (params) => (key) Id , (Value) 1e69b409-eb53-41f9-b6ea-8ad4a4183bb6 (**) 
+       		(**) pegar o valor de codigoInternoSolicitacao que foi gerado no incluir
+
+
+Exemplos de Inclusões
+-----------------------------------------------------
+    {
+        "codigoInternoSolicitacao": "63506c08-b687-42db-b23e-976bba4e5ad9",
+        "dataTransferencia": "2020-07-01T00:00:00",
+        "agenteCedente": {
+            "instituicao": "820-6 BB-BI",
+            "codigoInvestidor": "12345678"
+        },
+        "agenteCessionario": {
+            "instituicao": "XP INVESTIMENTOS CCTVM S.A. MATRIZ 3-5",
+            "codigoInvestidor": "87654321"
+        },
+        "cliente": {
+            "nome": "Nome Cliente",
+            "documentoCpf": "Numero CPF",
+            "endereco": "Endereço Cliente Maior que 20"
+        },
+        "motivo": 10,
+        "ativos": [
+            {
+                "codigo": "BBSA3",
+                "tipo": "Ações",
+                "quantidade": 200
+            },
+            {
+                "codigo": "IPCA+",
+                "tipo": "Titulo do Tesouro",
+                "quantidade": 300
+            }
+        ]
+    }
+-----------------------------------------------------
+    {
+        "codigoInternoSolicitacao": "Obter",
+        "dataTransferencia": "2020-07-02T00:00:00",
+        "agenteCedente": {
+            "instituicao": "BB BANCO DE INVESTIMENTO S/A - 820",
+            "codigoInvestidor": "AA123456"
+        },
+        "agenteCessionario": {
+            "instituicao": "BANK OF AMERICA MERRILL LYNCH - 1817",
+            "codigoInvestidor": "13579"
+        },
+        "cliente": {
+            "nome": "Nome Cliente",
+            "documentoCpf": "Numero CPF",
+            "endereco": "Endereço Cliente Maior que 20"
+        },
+        "motivo": 12,
+        "ativos": [
+            {
+                "codigo": "PETR4",
+                "tipo": "Ações",
+                "quantidade": 100
+            },
+            {
+                "codigo": "Debênture",
+                "tipo": "Debênture",
+                "quantidade": 200
+            }
+        ]
+    }
+-----------------------------------------------------
