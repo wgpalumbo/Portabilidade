@@ -9,6 +9,8 @@ namespace Portabilidade.Domain.Repositories
         void Incluir(Solicitacao solicitacao);
         IEnumerable<Solicitacao> ListarSolicitacao();
         Solicitacao ObterPorId(Guid id);
+        void Alterar(Solicitacao solicitacao);
+        void Remover(Solicitacao solicitacao);
 
     }
 }

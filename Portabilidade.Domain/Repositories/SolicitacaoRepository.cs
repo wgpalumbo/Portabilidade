@@ -15,8 +15,14 @@ namespace Portabilidade.Domain.Repositories
         }
 
         public void Incluir(Solicitacao solicitacao)
-        {
+        {            
             _storage.Add(solicitacao);
+        }
+
+        public void Alterar(Solicitacao solicitacao)
+        {
+            var index = _storage.FindIndex(0, 1, x => x.CodigoInternoSolicitacao == solicitacao.CodigoInternoSolicitacao);
+            _storage[index] = solicitacao;
         }
 
         public IEnumerable<Solicitacao> ListarSolicitacao()
@@ -27,6 +33,11 @@ namespace Portabilidade.Domain.Repositories
         public Solicitacao ObterPorId(Guid id)
         {
             return _storage.FirstOrDefault(x => x.CodigoInternoSolicitacao == id);
+        }
+
+        public void Remover(Solicitacao solicitacao)
+        {
+            _storage.Remove(solicitacao);
         }
     }
 }
