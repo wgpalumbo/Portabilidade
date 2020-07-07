@@ -1,3 +1,9 @@
+Editor = Visual Studio Code
+
+Pasta Domain e Test -> dotnet new classlib
+Pasta UI -> dotnet new web
+pasta root -> dotnet new sln
+
 
 dotnet add package Microsoft.AspNet.WebPages --version 3.2.7 
 dotnet add package Microsoft.AspNet.Mvc --version 5.2.7  
