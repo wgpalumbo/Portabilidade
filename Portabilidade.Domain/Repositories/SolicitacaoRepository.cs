@@ -16,6 +16,7 @@ namespace Portabilidade.Domain.Repositories
 
         public void Incluir(Solicitacao solicitacao)
         {
+          
             _storage.Add(solicitacao);
         }
  

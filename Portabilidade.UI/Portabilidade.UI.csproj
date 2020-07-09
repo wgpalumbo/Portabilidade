@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Portabilidade.Domain\Portabilidade.Domain.csproj" />
+    <ProjectReference Include="..\Portabilidade.Infra\Portabilidade.Infra.csproj" />
   </ItemGroup>
 
   <ItemGroup>
