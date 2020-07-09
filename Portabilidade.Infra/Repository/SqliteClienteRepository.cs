@@ -1,6 +1,9 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Newtonsoft.Json;
@@ -10,7 +13,7 @@ using Portabilidade.Domain.Repositories;
 
 namespace Portabilidade.Infra.Repository
 {
-    public sealed class SqliteClienteRepository : SqliteBaseRepository, ISqliteRepository
+    public sealed class SqliteClienteRepository : SqliteBaseRepository, ISqliteRepository<Cliente>
     {
 
         public void CriarTabela()
@@ -72,6 +75,7 @@ namespace Portabilidade.Infra.Repository
             }
 
         }
+        
         public string Obter(string id)
         {
             Cliente retorno = null;
@@ -86,7 +90,7 @@ namespace Portabilidade.Infra.Repository
                 cnn.Close();
             }
 
-            return JsonConvert.SerializeObject(retorno);
+            return JsonConvert.SerializeObject(retorno, Formatting.Indented);
 
         }
 
@@ -95,11 +99,23 @@ namespace Portabilidade.Infra.Repository
             using (var cnn = SimpleDbConnection())
             {
                 cnn.Open();
-                var affectedrows = cnn.Execute("DELETE FROM cliente WHERE DocumentoCPF = @Id", new { Id = id });                 
+                var affectedrows = cnn.Execute("DELETE FROM cliente WHERE DocumentoCPF = @Id", new { Id = id });
                 cnn.Close();
-                return affectedrows > 0; 
+                return affectedrows > 0;
             }
         }
 
+        IEnumerable<Cliente> ISqliteRepository<Cliente>.Listar()
+        {
+           string query = "SELECT * FROM cliente ORDER BY Nome";
+            using (var cnn = SimpleDbConnection())
+            {
+                cnn.Open();
+                IEnumerable<Cliente> Clientes = cnn.Query<Cliente>(query).ToList();
+                cnn.Close();                
+
+                return Clientes;
+            }
+        }
     }
 }

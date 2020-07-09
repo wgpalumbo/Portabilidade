@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Portabilidade.Domain.Entities;
 using Portabilidade.Domain.Repositories;
 using Portabilidade.Infra.Repository;
 
@@ -16,7 +17,7 @@ namespace Portabilidade.UI
         {
             services.AddMvc();
             services.Add(new ServiceDescriptor(typeof(ISolicitacaoRepository), typeof(SolicitacaoRepository), ServiceLifetime.Transient));
-            services.Add(new ServiceDescriptor(typeof(ISqliteRepository), typeof(SqliteClienteRepository), ServiceLifetime.Transient));
+            services.Add(new ServiceDescriptor(typeof(ISqliteRepository<Cliente>), typeof(SqliteClienteRepository), ServiceLifetime.Transient));
             services.AddSwaggerGen();
         }
 

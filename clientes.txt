@@ -1,0 +1,24 @@
+{       
+	"cliente": {
+	    "nome": "Nome Cliente-1",
+	    "documentoCpf": "Numero CPF-1",
+	    "endereco": "Endereço Cliente Maior que 20-1"
+	    }
+}
+//------------------
+{       
+	"cliente": {
+	    "nome": "Nome Cliente-2",
+	    "documentoCpf": "Numero CPF-2",
+	    "endereco": "Endereço Cliente Maior que 20-2"
+	    }
+}
+//------------------
+{       
+	"cliente": {
+	    "nome": "Nome Cliente-3",
+	    "documentoCpf": "Numero CPF-3",
+	    "endereco": "Endereço Cliente Maior que 20-3"
+	    }
+}
+//------------------

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,9 @@ namespace Portabilidade.UI.Controllers
 {
     public class PortabilidadeDBController : Controller
     {
-        private readonly ISqliteRepository _cliente;
+        private readonly ISqliteRepository<Cliente> _cliente;
 
-        public PortabilidadeDBController(ISqliteRepository cliente)
+        public PortabilidadeDBController(ISqliteRepository<Cliente> cliente)
         {
             _cliente = cliente;
         }
@@ -29,21 +30,19 @@ namespace Portabilidade.UI.Controllers
 
         //Listar 
         [HttpGet("v2/portabilidade/cliente")]
-        public async Task<IActionResult> Listar()
+        public IActionResult Listar()
         {
-            string newPasta = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\Portabilidade.Infra\Data\Portabilidade.sqlite"));
-            Console.WriteLine(newPasta);
-            Console.WriteLine(System.IO.File.Exists(newPasta));
-            _cliente.CriarTabela();
-            return Ok();
+            IEnumerable<Cliente> Clientes = _cliente.Listar();            
+            var result = JsonConvert.SerializeObject(Clientes, Formatting.Indented);            
+            return Ok(result);
         }
 
         //Trazer uma Especifica
         [HttpGet("v2/portabilidade/cliente/{id}")]
         public IActionResult ObterPorId(string id)
         {
-            string output = _cliente.Obter(id);
-            Cliente cliente = JsonConvert.DeserializeObject<Cliente>(output);
+            //string output = _cliente.Obter(id);
+            //Cliente cliente = JsonConvert.DeserializeObject<Cliente>(output);
             return Ok(_cliente.Obter(id));
         }
 
