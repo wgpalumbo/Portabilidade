@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Portabilidade.Domain.Entities;
 using Portabilidade.Domain.Repositories;
+using Portabilidade.Service.Util;
 
 namespace Portabilidade.Infra.Repository
 {
@@ -48,6 +49,7 @@ namespace Portabilidade.Infra.Repository
                 Cliente cliente = new Cliente(Convert.ToString(data.cliente.nome), Convert.ToString(data.cliente.documentoCpf), Convert.ToString(data.cliente.endereco));
                 var validatorCliente = new ClienteValidator();
                 var validResCliente = validatorCliente.Validate(cliente);
+                Console.WriteLine("CPF Cliente OK SQLite? => " + (new CpfValidador(cliente.DocumentoCpf)).EstaValido());
                 Console.WriteLine("Cliente OK SQLite? => " + validResCliente.IsValid);
                 Console.WriteLine(cliente.Nome);
                 if (validResCliente.IsValid)
@@ -75,7 +77,7 @@ namespace Portabilidade.Infra.Repository
             }
 
         }
-        
+
         public string Obter(string id)
         {
             Cliente retorno = null;
@@ -107,12 +109,12 @@ namespace Portabilidade.Infra.Repository
 
         IEnumerable<Cliente> ISqliteRepository<Cliente>.Listar()
         {
-           string query = "SELECT * FROM cliente ORDER BY Nome";
+            string query = "SELECT * FROM cliente ORDER BY Nome";
             using (var cnn = SimpleDbConnection())
             {
                 cnn.Open();
                 IEnumerable<Cliente> Clientes = cnn.Query<Cliente>(query).ToList();
-                cnn.Close();                
+                cnn.Close();
 
                 return Clientes;
             }

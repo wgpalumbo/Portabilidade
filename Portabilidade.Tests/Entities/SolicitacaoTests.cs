@@ -9,7 +9,7 @@ namespace Portabilidade.Tests.Entities
     public class SolicitacaoTests : AbstractValidator<Solicitacao>
     {
         //Variaveis Corretas
-        Cliente cliente = new Cliente("Nome Cliente", "Numero CPF", "Endereço Cliente Maior que 20");
+        Cliente cliente = new Cliente("Nome Cliente", "179.506.820-51", "Endereço Cliente Maior que 20");
         Agente agenteCedente = new Agente("820-6 BB-BI", "12345678");
         Agente agenteCessionario = new Agente("XP INVESTIMENTOS CCTVM S.A. MATRIZ 3-5", "87654321");
         Ativo ativo = new Ativo("BBSA3", "Ações", 100);

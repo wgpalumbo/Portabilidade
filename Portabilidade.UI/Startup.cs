@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Portabilidade.Domain.Entities;
@@ -16,6 +17,11 @@ namespace Portabilidade.UI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {                
+                //options.KnownProxies.Add(System.Net.IPAddress.Parse("192.168.1.13"));
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
             services.Add(new ServiceDescriptor(typeof(ISolicitacaoRepository), typeof(SolicitacaoRepository), ServiceLifetime.Transient));
             services.Add(new ServiceDescriptor(typeof(ISqliteRepository<Cliente>), typeof(SqliteClienteRepository), ServiceLifetime.Transient));
             services.AddSwaggerGen();
@@ -27,7 +33,29 @@ namespace Portabilidade.UI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseForwardedHeaders();
             }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseForwardedHeaders();
+                app.UseHsts();
+            }
+
+            //Obriga toda http ser https
+            //app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
+            // // using Microsoft.Extensions.FileProviders;
+            // // using System.IO;
+            // app.UseStaticFiles(new StaticFileOptions
+            // {
+            //     FileProvider = new PhysicalFileProvider(
+            //         Path.Combine(env.ContentRootPath, "MyStaticFiles")),
+            //     RequestPath = "/StaticFiles"
+            // });
+
+
 
             //ATENÇÃO!!! Liberado
             app.UseCors(config =>

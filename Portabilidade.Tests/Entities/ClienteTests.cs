@@ -11,17 +11,23 @@ namespace Portabilidade.Tests.Entities
         [TestMethod]
         public void RetornaTrueQuandoClienteIsValid()
         {
-            var cliente = new Cliente("Nome Cliente", "Numero CPF", "Endereço Cliente Maior que 20");
+            var cliente = new Cliente("Nome Cliente PF", "179.506.820-51", "Endereço Cliente Maior que 20");
             var validator = new ClienteValidator();
             var validRes = validator.Validate(cliente);
-            Assert.IsTrue(validRes.IsValid);
+
+            var cliente2 = new Cliente("Nome Cliente PJ", "42.630.193/0001-04", "Endereço Cliente Maior que 20");
+            var validator2 = new ClienteValidator();
+            var validRes2 = validator2.Validate(cliente2);
+
+
+            Assert.IsTrue(validRes.IsValid && validRes2.IsValid);
         }
 
         [TestMethod]
         public void RetornaFalsoQuandoClienteIsInvalid()
         {
             //Nome = NULL or Empty
-            var cliente = new Cliente("", "Numero CPF", "Endereço Cliente Maior que 20");
+            var cliente = new Cliente("", "179.506.820-51", "Endereço Cliente Maior que 20");
             var validator = new ClienteValidator();
             var validRes = validator.Validate(cliente);
             Assert.IsFalse(validRes.IsValid);
@@ -31,7 +37,7 @@ namespace Portabilidade.Tests.Entities
         public void RetornaFalsoQuandoEnderecoIsInvalid()
         {
             //Endereco menor que 20 caracteres
-            var cliente = new Cliente("Nome Cliente", "Numero CPF", "Endereço Cliente");
+            var cliente = new Cliente("Nome Cliente", "179.506.820-51", "Endereço Cliente");
             var validator = new ClienteValidator();
             var validRes = validator.Validate(cliente);
             Assert.IsFalse(validRes.IsValid);
@@ -41,12 +47,35 @@ namespace Portabilidade.Tests.Entities
         public void RetornaFalsoQuandoDocumentoCPFIsInvalid()
         {
             //DocumentoCPF is Null or Empty
-            var cliente = new Cliente("Nome Cliente", "", "Endereço Cliente");
+            var cliente = new Cliente("Nome Cliente", "", "Endereço Cliente Maior que 20");
             var validator = new ClienteValidator();
             var validRes = validator.Validate(cliente);
+
             Assert.IsFalse(validRes.IsValid);
         }
-        
+
+        [TestMethod]
+        public void RetornaFalsoQuandoDocumentoCPFIsInvalid2()
+        {
+            //DocumentoCPF Mudei um Numero no Digito
+            var cliente = new Cliente("Nome Cliente PF", "179.506.820-52", "Endereço Cliente Maior que 20");
+            var validator = new ClienteValidator();
+            var validRes = validator.Validate(cliente);
+
+            Assert.IsFalse(validRes.IsValid);
+        }
+
+        [TestMethod]
+        public void RetornaFalsoQuandoDocumentoCNPJInvalid()
+        {
+            //DocumentoCNPJ Mudei um Numero no Digito
+            var cliente = new Cliente("Nome Cliente PJ", "42.630.193/0001-05", "Endereço Cliente Maior que 20");
+            var validator = new ClienteValidator();
+            var validRes = validator.Validate(cliente);
+
+            Assert.IsFalse(validRes.IsValid);
+        }
+
 
 
 

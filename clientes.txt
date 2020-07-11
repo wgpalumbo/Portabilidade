@@ -1,24 +1,49 @@
 {       
 	"cliente": {
-	    "nome": "Nome Cliente-1",
-	    "documentoCpf": "Numero CPF-1",
+	    "nome": "Nome Cliente-PF-1",
+	    "documentoCpf": "179.506.820-51",
 	    "endereco": "Endereço Cliente Maior que 20-1"
 	    }
 }
 //------------------
 {       
 	"cliente": {
-	    "nome": "Nome Cliente-2",
-	    "documentoCpf": "Numero CPF-2",
+	    "nome": "Nome Cliente-PF-2",
+	    "documentoCpf": "407.624.100-27",
 	    "endereco": "Endereço Cliente Maior que 20-2"
 	    }
 }
 //------------------
 {       
 	"cliente": {
-	    "nome": "Nome Cliente-3",
-	    "documentoCpf": "Numero CPF-3",
+	    "nome": "Nome Cliente-PF-3",
+	    "documentoCpf": "051.189.460-00",
 	    "endereco": "Endereço Cliente Maior que 20-3"
 	    }
 }
 //------------------
+{       
+	"cliente": {
+	    "nome": "Nome Cliente-PJ-1",
+	    "documentoCpf": "42.630.193/0001-04",
+	    "endereco": "Endereço Cliente Maior que 20-1"
+	    }
+}
+//------------------
+{       
+	"cliente": {
+	    "nome": "Nome Cliente-PJ-2",
+	    "documentoCpf": "57.330.035/0001-06",
+	    "endereco": "Endereço Cliente Maior que 20-2"
+	    }
+}
+//------------------
+{       
+	"cliente": {
+	    "nome": "Nome Cliente-PJ-3",
+	    "documentoCpf": "59.795.887/0001-02",
+	    "endereco": "Endereço Cliente Maior que 20-3"
+	    }
+}
+//------------------
+
