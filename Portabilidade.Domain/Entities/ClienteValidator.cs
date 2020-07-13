@@ -8,6 +8,11 @@ namespace Portabilidade.Domain.Entities
     public class ClienteValidator : AbstractValidator<Cliente>
     {
 
+        private IValidarStrategy _validarDocumento;
+        private void SetValidarDocumento(IValidarStrategy value)
+        { _validarDocumento = value; }
+
+
         public ClienteValidator()
         {
             RuleFor(x => x.Nome)
@@ -21,20 +26,24 @@ namespace Portabilidade.Domain.Entities
 
             RuleFor(x => x.Endereco).Length(20, 250).WithMessage("Por Favor, Endereço de 20 a 250 Caracteres");
 
-
         }
 
-        private bool BeAValidDocumento(string cpdcnpj)
+
+        private bool BeAValidDocumento(string cpfcnpj)
         {
-            string documento = new String(cpdcnpj.Where(Char.IsDigit).ToArray());
+            string documento = new String(cpfcnpj.Where(Char.IsDigit).ToArray());
+
             if (documento.Length == 11)
             {
-                return (new CpfValidador(cpdcnpj)).EstaValido();
+                SetValidarDocumento(new ValidarCpf(documento));
+                return (_validarDocumento.IsValid);
             }
-            else
+            else if (documento.Length == 14)
             {
-                return (new CnpjValidador(cpdcnpj)).EstaValido();
+                SetValidarDocumento(new ValidarCnpj(documento));
+                return (_validarDocumento.IsValid);
             }
+            return false;
         }
 
     }

@@ -32,8 +32,8 @@ namespace Portabilidade.UI.Controllers
         [HttpGet("v2/portabilidade/cliente")]
         public IActionResult Listar()
         {
-            IEnumerable<Cliente> Clientes = _cliente.Listar();            
-            var result = JsonConvert.SerializeObject(Clientes, Formatting.Indented);            
+            IEnumerable<Cliente> Clientes = _cliente.Listar();
+            var result = JsonConvert.SerializeObject(Clientes, Formatting.Indented);
             return Ok(result);
         }
 
@@ -50,7 +50,10 @@ namespace Portabilidade.UI.Controllers
         [HttpDelete("v2/portabilidade/cliente/{id}")]
         public IActionResult Remover(string id)
         {
-            return Ok((_cliente.Excluir(id) ? "Cliente Excluido Corretamente" : "Cliente Não Localizado"));
+            var task = _cliente.Excluir(id);
+            task.Wait();
+            bool TrueOrFalse = task.Result;
+            return Ok(TrueOrFalse ? "Cliente Excluido Corretamente" : "Cliente Não Localizado");
         }
 
     }

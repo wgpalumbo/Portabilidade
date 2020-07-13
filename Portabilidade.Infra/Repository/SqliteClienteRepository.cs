@@ -1,12 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Portabilidade.Domain.Entities;
 using Portabilidade.Domain.Repositories;
@@ -49,7 +47,7 @@ namespace Portabilidade.Infra.Repository
                 Cliente cliente = new Cliente(Convert.ToString(data.cliente.nome), Convert.ToString(data.cliente.documentoCpf), Convert.ToString(data.cliente.endereco));
                 var validatorCliente = new ClienteValidator();
                 var validResCliente = validatorCliente.Validate(cliente);
-                Console.WriteLine("CPF Cliente OK SQLite? => " + (new CpfValidador(cliente.DocumentoCpf)).EstaValido());
+               //cd . Console.WriteLine("CPF Cliente OK SQLite? => " + (new CpfValidador(cliente.DocumentoCpf)).EstaValido());
                 Console.WriteLine("Cliente OK SQLite? => " + validResCliente.IsValid);
                 Console.WriteLine(cliente.Nome);
                 if (validResCliente.IsValid)
@@ -78,32 +76,31 @@ namespace Portabilidade.Infra.Repository
 
         }
 
-        public string Obter(string id)
+        async Task<Cliente> ISqliteRepository<Cliente>.Obter(string id)
         {
             Cliente retorno = null;
 
             using (var cnn = SimpleDbConnection())
             {
-                cnn.Open();
+                await cnn.OpenAsync();
                 retorno = cnn.QueryFirstOrDefaultAsync<Cliente>(
                     @"SELECT Nome, DocumentoCPF, Endereco
                     FROM cliente 
                     WHERE DocumentoCPF = @id", new { id }).Result;
-                cnn.Close();
+                await cnn.CloseAsync();
             }
 
-            return JsonConvert.SerializeObject(retorno, Formatting.Indented);
-
+            return retorno;
         }
 
-        public bool Excluir(string id)
+        async Task<bool> ISqliteRepository<Cliente>.Excluir(string id)
         {
             using (var cnn = SimpleDbConnection())
             {
-                cnn.Open();
-                var affectedrows = cnn.Execute("DELETE FROM cliente WHERE DocumentoCPF = @Id", new { Id = id });
-                cnn.Close();
-                return affectedrows > 0;
+                await cnn.OpenAsync();
+                var affectedrows = cnn.ExecuteAsync("DELETE FROM cliente WHERE DocumentoCPF = @Id", new { Id = id }).Result;
+                await cnn.CloseAsync();
+                return (affectedrows > 0);
             }
         }
 
@@ -113,11 +110,13 @@ namespace Portabilidade.Infra.Repository
             using (var cnn = SimpleDbConnection())
             {
                 cnn.Open();
-                IEnumerable<Cliente> Clientes = cnn.Query<Cliente>(query).ToList();
+                IEnumerable<Cliente> Clientes = cnn.QueryAsync<Cliente>(query).Result.ToList();
                 cnn.Close();
 
                 return Clientes;
             }
         }
+
+
     }
 }

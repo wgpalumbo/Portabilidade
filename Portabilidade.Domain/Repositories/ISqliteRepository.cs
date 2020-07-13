@@ -7,8 +7,8 @@ namespace Portabilidade.Domain.Repositories
     {
         void CriarTabela();
         Task Incluir(dynamic json);        
-        bool Excluir(string id);
-        string Obter(string id);
+        Task<bool> Excluir(string id);
+        Task<T> Obter(string id);
          IEnumerable<T> Listar();
         
     }
