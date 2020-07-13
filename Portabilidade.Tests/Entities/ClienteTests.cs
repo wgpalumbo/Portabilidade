@@ -8,19 +8,16 @@ namespace Portabilidade.Tests.Entities
     public class ClienteTests : AbstractValidator<Cliente>
     {
 
-        [TestMethod]
-        public void RetornaTrueQuandoClienteIsValid()
+        [DataTestMethod]        
+        [DataRow("179.506.820-51")]     //CPF valido
+        [DataRow("42.630.193/0001-04")] //CNPJ valido
+        public void RetornaTrueQuandoClienteIsValid(string doc)
         {
-            var cliente = new Cliente("Nome Cliente PF", "179.506.820-51", "Endereço Cliente Maior que 20");
+            var cliente = new Cliente("Nome Cliente PF", doc, "Endereço Cliente Maior que 20");
             var validator = new ClienteValidator();
-            var validRes = validator.Validate(cliente);
+            var validRes = validator.Validate(cliente);           
 
-            var cliente2 = new Cliente("Nome Cliente PJ", "42.630.193/0001-04", "Endereço Cliente Maior que 20");
-            var validator2 = new ClienteValidator();
-            var validRes2 = validator2.Validate(cliente2);
-
-
-            Assert.IsTrue(validRes.IsValid && validRes2.IsValid);
+            Assert.IsTrue(validRes.IsValid);
         }
 
         [TestMethod]
@@ -43,40 +40,20 @@ namespace Portabilidade.Tests.Entities
             Assert.IsFalse(validRes.IsValid);
         }
 
-        [TestMethod]
-        public void RetornaFalsoQuandoDocumentoCPFIsInvalid()
+        [DataTestMethod]
+        [DataRow("")]               //DocumentoCPF is Null or Empty
+        [DataRow("179.506.820-52")] //DocumentoCPF Mudei um Numero no Digito
+        [DataRow("42.630.193/0001-05")] //DocumentoCNPJ Mudei um Numero no Digito
+        public void RetornaFalsoQuandoDocumentoIsInvalid(string cpf)
         {
             //DocumentoCPF is Null or Empty
-            var cliente = new Cliente("Nome Cliente", "", "Endereço Cliente Maior que 20");
+            var cliente = new Cliente("Nome Cliente", cpf, "Endereço Cliente Maior que 20");
             var validator = new ClienteValidator();
             var validRes = validator.Validate(cliente);
 
             Assert.IsFalse(validRes.IsValid);
         }
-
-        [TestMethod]
-        public void RetornaFalsoQuandoDocumentoCPFIsInvalid2()
-        {
-            //DocumentoCPF Mudei um Numero no Digito
-            var cliente = new Cliente("Nome Cliente PF", "179.506.820-52", "Endereço Cliente Maior que 20");
-            var validator = new ClienteValidator();
-            var validRes = validator.Validate(cliente);
-
-            Assert.IsFalse(validRes.IsValid);
-        }
-
-        [TestMethod]
-        public void RetornaFalsoQuandoDocumentoCNPJInvalid()
-        {
-            //DocumentoCNPJ Mudei um Numero no Digito
-            var cliente = new Cliente("Nome Cliente PJ", "42.630.193/0001-05", "Endereço Cliente Maior que 20");
-            var validator = new ClienteValidator();
-            var validRes = validator.Validate(cliente);
-
-            Assert.IsFalse(validRes.IsValid);
-        }
-
-
+       
 
 
         // public void TestMethod1()
