@@ -78,6 +78,8 @@ namespace Portabilidade.Infra.Repository
 
         async Task<Cliente> ISqliteRepository<Cliente>.Obter(string id)
         {
+            Console.WriteLine("ID = "+id);
+
             Cliente retorno = null;
 
             using (var cnn = SimpleDbConnection())
@@ -95,6 +97,8 @@ namespace Portabilidade.Infra.Repository
 
         async Task<bool> ISqliteRepository<Cliente>.Excluir(string id)
         {
+            Console.WriteLine("ID = "+id);
+            
             using (var cnn = SimpleDbConnection())
             {
                 await cnn.OpenAsync();

@@ -41,16 +41,18 @@ namespace Portabilidade.UI.Controllers
         [HttpGet("v2/portabilidade/cliente/{id}")]
         public IActionResult ObterPorId(string id)
         {
+            string _id = System.Net.WebUtility.UrlDecode(id);
             //string output = _cliente.Obter(id);
             //Cliente cliente = JsonConvert.DeserializeObject<Cliente>(output);
-            return Ok(_cliente.Obter(id));
+            return Ok(_cliente.Obter(_id));
         }
 
         //Excluir
         [HttpDelete("v2/portabilidade/cliente/{id}")]
         public IActionResult Remover(string id)
         {
-            var task = _cliente.Excluir(id);
+            string _id = System.Net.WebUtility.UrlDecode(id);
+            var task = _cliente.Excluir(_id);
             task.Wait();
             bool TrueOrFalse = task.Result;
             return Ok(TrueOrFalse ? "Cliente Excluido Corretamente" : "Cliente Não Localizado");
