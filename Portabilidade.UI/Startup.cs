@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Portabilidade.Domain.Entities;
 using Portabilidade.Domain.Repositories;
 using Portabilidade.Infra.Repository;
+using Portabilidade.Service.Util;
 
 namespace Portabilidade.UI
 {
@@ -18,12 +19,14 @@ namespace Portabilidade.UI
         {
             services.AddMvc();
             services.Configure<ForwardedHeadersOptions>(options =>
-            {                
+            {
                 //options.KnownProxies.Add(System.Net.IPAddress.Parse("192.168.1.13"));
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
             services.Add(new ServiceDescriptor(typeof(ISolicitacaoRepository), typeof(SolicitacaoRepository), ServiceLifetime.Transient));
             services.Add(new ServiceDescriptor(typeof(ISqliteRepository<Cliente>), typeof(SqliteClienteRepository), ServiceLifetime.Transient));
+            services.Add(new ServiceDescriptor(typeof(IValidarStrategy), typeof(ValidarCnpj), ServiceLifetime.Transient));
+            services.Add(new ServiceDescriptor(typeof(IValidarStrategy), typeof(ValidarCpf), ServiceLifetime.Transient));
             services.AddSwaggerGen();
         }
 

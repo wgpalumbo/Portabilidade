@@ -30,31 +30,29 @@ namespace Portabilidade.UI.Controllers
 
         //Listar 
         [HttpGet("v2/portabilidade/cliente")]
-        public IActionResult Listar()
+        public async Task<IActionResult> Listar()
         {
-            IEnumerable<Cliente> Clientes = _cliente.Listar();
-            var result = JsonConvert.SerializeObject(Clientes, Formatting.Indented);
+            var Clientes = await _cliente.Listar();
+            string result = JsonConvert.SerializeObject(Clientes, Formatting.Indented);            
             return Ok(result);
         }
 
         //Trazer uma Especifica
         [HttpGet("v2/portabilidade/cliente/{id}")]
-        public IActionResult ObterPorId(string id)
+        public async Task<IActionResult> ObterPorId(string id)
         {
             string _id = System.Net.WebUtility.UrlDecode(id);
             //string output = _cliente.Obter(id);
             //Cliente cliente = JsonConvert.DeserializeObject<Cliente>(output);
-            return Ok(_cliente.Obter(_id));
+            return Ok(await _cliente.Obter(_id));
         }
 
         //Excluir
         [HttpDelete("v2/portabilidade/cliente/{id}")]
-        public IActionResult Remover(string id)
+        public async Task<IActionResult> Remover(string id)
         {
             string _id = System.Net.WebUtility.UrlDecode(id);
-            var task = _cliente.Excluir(_id);
-            task.Wait();
-            bool TrueOrFalse = task.Result;
+            bool TrueOrFalse = await _cliente.Excluir(_id);                       
             return Ok(TrueOrFalse ? "Cliente Excluido Corretamente" : "Cliente Não Localizado");
         }
 

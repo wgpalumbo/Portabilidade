@@ -41,8 +41,8 @@ namespace Portabilidade.Tests.Entities
         }
 
         [DataTestMethod]
-        [DataRow("")]               //DocumentoCPF is Null or Empty
-        [DataRow("179.506.820-52")] //DocumentoCPF Mudei um Numero no Digito
+        [DataRow("")]                   //DocumentoCPF is Null or Empty
+        [DataRow("179.506.820-52")]     //DocumentoCPF Mudei um Numero no Digito
         [DataRow("42.630.193/0001-05")] //DocumentoCNPJ Mudei um Numero no Digito
         public void RetornaFalsoQuandoDocumentoIsInvalid(string cpf)
         {

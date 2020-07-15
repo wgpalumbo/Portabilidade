@@ -47,7 +47,7 @@ namespace Portabilidade.Infra.Repository
                 Cliente cliente = new Cliente(Convert.ToString(data.cliente.nome), Convert.ToString(data.cliente.documentoCpf), Convert.ToString(data.cliente.endereco));
                 var validatorCliente = new ClienteValidator();
                 var validResCliente = validatorCliente.Validate(cliente);
-               //cd . Console.WriteLine("CPF Cliente OK SQLite? => " + (new CpfValidador(cliente.DocumentoCpf)).EstaValido());
+                //cd . Console.WriteLine("CPF Cliente OK SQLite? => " + (new CpfValidador(cliente.DocumentoCpf)).EstaValido());
                 Console.WriteLine("Cliente OK SQLite? => " + validResCliente.IsValid);
                 Console.WriteLine(cliente.Nome);
                 if (validResCliente.IsValid)
@@ -78,44 +78,45 @@ namespace Portabilidade.Infra.Repository
 
         async Task<Cliente> ISqliteRepository<Cliente>.Obter(string id)
         {
-            Console.WriteLine("ID = "+id);
+            Console.WriteLine("ID = " + id);
 
-            Cliente retorno = null;
+            //Cliente retorno = null;
 
             using (var cnn = SimpleDbConnection())
             {
                 await cnn.OpenAsync();
-                retorno = cnn.QueryFirstOrDefaultAsync<Cliente>(
+                var retorno = await cnn.QueryAsync<Cliente>(
                     @"SELECT Nome, DocumentoCPF, Endereco
                     FROM cliente 
-                    WHERE DocumentoCPF = @id", new { id }).Result;
+                    WHERE DocumentoCPF = @id", new { id });
                 await cnn.CloseAsync();
+                return retorno.FirstOrDefault();
             }
 
-            return retorno;
+            //return retorno;
         }
 
         async Task<bool> ISqliteRepository<Cliente>.Excluir(string id)
         {
-            Console.WriteLine("ID = "+id);
-            
+            Console.WriteLine("ID = " + id);
+
             using (var cnn = SimpleDbConnection())
             {
                 await cnn.OpenAsync();
-                var affectedrows = cnn.ExecuteAsync("DELETE FROM cliente WHERE DocumentoCPF = @Id", new { Id = id }).Result;
+                var affectedrows = await cnn.ExecuteAsync("DELETE FROM cliente WHERE DocumentoCPF = @Id", new { Id = id });
                 await cnn.CloseAsync();
                 return (affectedrows > 0);
             }
         }
 
-        IEnumerable<Cliente> ISqliteRepository<Cliente>.Listar()
+        async Task<IEnumerable<Cliente>> ISqliteRepository<Cliente>.Listar()
         {
             string query = "SELECT * FROM cliente ORDER BY Nome";
             using (var cnn = SimpleDbConnection())
             {
-                cnn.Open();
-                IEnumerable<Cliente> Clientes = cnn.QueryAsync<Cliente>(query).Result.ToList();
-                cnn.Close();
+                await cnn.OpenAsync();
+                var Clientes = await cnn.QueryAsync<Cliente>(query);
+                await cnn.CloseAsync();
 
                 return Clientes;
             }
