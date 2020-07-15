@@ -6,62 +6,51 @@ namespace Portabilidade.Service.Util
 {
     public class ValidarCpf : IValidarStrategy
     {
-        private string cpf;
-
-        public ValidarCpf(string numerodoc)
+        public bool IsValid(string cpf)
         {
-            cpf = numerodoc;
-        }
+            int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int[] multiplicador2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
 
-        public bool IsValid
-        {
-            get
-            {
-                int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
-                int[] multiplicador2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            cpf = new String(cpf.Where(Char.IsDigit).ToArray());
 
-                cpf = new String(cpf.Where(Char.IsDigit).ToArray());
+            if (cpf.Length != 11)
+                return false;
 
-                if (cpf.Length != 11)
+            if (CpfComDigitosRepetidos(cpf))
+                return false;
+
+            for (int j = 0; j < 10; j++)
+                if (j.ToString().PadLeft(11, char.Parse(j.ToString())) == cpf)
                     return false;
 
-                if (CpfComDigitosRepetidos(cpf))
-                    return false;
+            string tempCpf = cpf.Substring(0, 9);
+            int soma = 0;
 
-                for (int j = 0; j < 10; j++)
-                    if (j.ToString().PadLeft(11, char.Parse(j.ToString())) == cpf)
-                        return false;
+            for (int i = 0; i < 9; i++)
+                soma += int.Parse(tempCpf[i].ToString()) * multiplicador1[i];
 
-                string tempCpf = cpf.Substring(0, 9);
-                int soma = 0;
+            int resto = soma % 11;
+            if (resto < 2)
+                resto = 0;
+            else
+                resto = 11 - resto;
 
-                for (int i = 0; i < 9; i++)
-                    soma += int.Parse(tempCpf[i].ToString()) * multiplicador1[i];
+            string digito = resto.ToString();
+            tempCpf = tempCpf + digito;
+            soma = 0;
+            for (int i = 0; i < 10; i++)
+                soma += int.Parse(tempCpf[i].ToString()) * multiplicador2[i];
 
-                int resto = soma % 11;
-                if (resto < 2)
-                    resto = 0;
-                else
-                    resto = 11 - resto;
+            resto = soma % 11;
+            if (resto < 2)
+                resto = 0;
+            else
+                resto = 11 - resto;
 
-                string digito = resto.ToString();
-                tempCpf = tempCpf + digito;
-                soma = 0;
-                for (int i = 0; i < 10; i++)
-                    soma += int.Parse(tempCpf[i].ToString()) * multiplicador2[i];
+            digito = digito + resto.ToString();
 
-                resto = soma % 11;
-                if (resto < 2)
-                    resto = 0;
-                else
-                    resto = 11 - resto;
+            return cpf.EndsWith(digito);
 
-                digito = digito + resto.ToString();
-
-                return cpf.EndsWith(digito);
-
-
-            }
         }
 
         private bool CpfComDigitosRepetidos(string numero)

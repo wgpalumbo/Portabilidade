@@ -5,13 +5,11 @@ using Portabilidade.Service.Util;
 
 namespace Portabilidade.Domain.Entities
 {
+
     public class ClienteValidator : AbstractValidator<Cliente>
     {
 
-        private IValidarStrategy _validarDocumento;
-        private void SetValidarDocumento(IValidarStrategy value)
-        { _validarDocumento = value; }
-
+        private IValidarStrategy validarDocumento;
 
         public ClienteValidator()
         {
@@ -31,17 +29,18 @@ namespace Portabilidade.Domain.Entities
 
         private bool BeAValidDocumento(string cpfcnpj)
         {
+
             string documento = new String(cpfcnpj.Where(Char.IsDigit).ToArray());
 
             if (documento.Length == 11)
             {
-                SetValidarDocumento(new ValidarCpf(documento));
-                return (_validarDocumento.IsValid);
+                validarDocumento = (IValidarStrategy)Activator.CreateInstance(typeof(ValidarCpf));
+                return (validarDocumento.IsValid(documento));
             }
             else if (documento.Length == 14)
             {
-                SetValidarDocumento(new ValidarCnpj(documento));
-                return (_validarDocumento.IsValid);
+                validarDocumento = (IValidarStrategy)Activator.CreateInstance(typeof(ValidarCnpj));
+                return (validarDocumento.IsValid(documento));
             }
             return false;
         }
