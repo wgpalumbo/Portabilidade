@@ -23,11 +23,13 @@ namespace Portabilidade.UI
                 //options.KnownProxies.Add(System.Net.IPAddress.Parse("192.168.1.13"));
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
-            services.Add(new ServiceDescriptor(typeof(ISolicitacaoRepository), typeof(SolicitacaoRepository), ServiceLifetime.Transient));
+            services.Add(new ServiceDescriptor(typeof(ISqliteRepository<Solicitacao>), typeof(SqliteSolicitacaoRepository), ServiceLifetime.Transient));
             services.Add(new ServiceDescriptor(typeof(ISqliteRepository<Cliente>), typeof(SqliteClienteRepository), ServiceLifetime.Transient));
             services.Add(new ServiceDescriptor(typeof(IValidarStrategy), typeof(ValidarCnpj), ServiceLifetime.Transient));
             services.Add(new ServiceDescriptor(typeof(IValidarStrategy), typeof(ValidarCpf), ServiceLifetime.Transient));
-            services.AddSwaggerGen();
+
+            services.AddSwaggerGen(c => { c.EnableAnnotations(); });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,14 +8,14 @@ namespace Portabilidade.Tests.Entities
     public class ClienteTests : AbstractValidator<Cliente>
     {
 
-        [DataTestMethod]        
+        [DataTestMethod]
         [DataRow("179.506.820-51")]     //CPF valido
         [DataRow("42.630.193/0001-04")] //CNPJ valido
         public void RetornaTrueQuandoClienteIsValid(string doc)
         {
             var cliente = new Cliente("Nome Cliente PF", doc, "Endereço Cliente Maior que 20");
             var validator = new ClienteValidator();
-            var validRes = validator.Validate(cliente);           
+            var validRes = validator.Validate(cliente);
 
             Assert.IsTrue(validRes.IsValid);
         }
@@ -53,7 +53,7 @@ namespace Portabilidade.Tests.Entities
 
             Assert.IsFalse(validRes.IsValid);
         }
-       
+
 
 
         // public void TestMethod1()

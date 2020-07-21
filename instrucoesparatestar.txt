@@ -23,7 +23,7 @@ Exemplos de Inclusões
         },
         "cliente": {
             "nome": "Nome Cliente",
-            "documentoCpf": "Numero CPF",
+            "documentoCpf": "179.506.820-51",
             "endereco": "Endereço Cliente Maior que 20"
         },
         "motivo": 10,
@@ -54,7 +54,7 @@ Exemplos de Inclusões
         },
         "cliente": {
             "nome": "Nome Cliente",
-            "documentoCpf": "Numero CPF",
+            "documentoCpf": "179.506.820-51",
             "endereco": "Endereço Cliente Maior que 20"
         },
         "motivo": 12,

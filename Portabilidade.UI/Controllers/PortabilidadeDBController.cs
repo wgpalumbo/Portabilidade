@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Portabilidade.Domain.Entities;
 using Portabilidade.Domain.Repositories;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Portabilidade.UI.Controllers
 {
@@ -21,6 +18,10 @@ namespace Portabilidade.UI.Controllers
 
         //Incluir e Alterar
         [HttpPost("v2/portabilidade/cliente")]
+        [SwaggerOperation(
+            Summary = "Incluir uma novo cliente",            
+            Tags = new[] { "Nova Cliente" }
+            )]
         public async Task<IActionResult> Incluir([FromBody] dynamic json)
         {
             _cliente.CriarTabela();
@@ -30,6 +31,10 @@ namespace Portabilidade.UI.Controllers
 
         //Listar 
         [HttpGet("v2/portabilidade/cliente")]
+        [SwaggerOperation(
+            Summary = "Listar clientes cadastrados",            
+            Tags = new[] { "Listar Clientes" }
+            )]
         public async Task<IActionResult> Listar()
         {
             var Clientes = await _cliente.Listar();
@@ -39,6 +44,10 @@ namespace Portabilidade.UI.Controllers
 
         //Trazer uma Especifica
         [HttpGet("v2/portabilidade/cliente/{id}")]
+        [SwaggerOperation(
+            Summary = "Obter um cliente especifico",            
+            Tags = new[] { "Obter Cliente" }
+            )]
         public async Task<IActionResult> ObterPorId(string id)
         {
             string _id = System.Net.WebUtility.UrlDecode(id);
@@ -49,6 +58,10 @@ namespace Portabilidade.UI.Controllers
 
         //Excluir
         [HttpDelete("v2/portabilidade/cliente/{id}")]
+        [SwaggerOperation(
+            Summary = "Remover um cliente especifico",            
+            Tags = new[] { "Excluir Cliente" }
+            )]
         public async Task<IActionResult> Remover(string id)
         {
             string _id = System.Net.WebUtility.UrlDecode(id);
