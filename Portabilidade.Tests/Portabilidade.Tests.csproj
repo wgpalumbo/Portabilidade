@@ -12,11 +12,13 @@
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Portabilidade.Domain\Portabilidade.Domain.csproj" />
     <ProjectReference Include="..\Portabilidade.Service\Portabilidade.Service.csproj" />
+    <ProjectReference Include="..\Portabilidade.UI\Portabilidade.UI.csproj" />
   </ItemGroup>
 
 </Project>

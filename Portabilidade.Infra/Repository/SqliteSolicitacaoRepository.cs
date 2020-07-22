@@ -32,20 +32,28 @@ namespace Portabilidade.Infra.Repository
             }
         }
 
-        async Task<bool> ISqliteRepository<Solicitacao>.Excluir(string id)
+        async ValueTask<bool> ISqliteRepository<Solicitacao>.Excluir(string id)
         {
             Console.WriteLine("ID = " + id);
-
-            using (var cnn = SimpleDbConnection())
+            bool retorno = false;
+            try
             {
-                await cnn.OpenAsync();
-                var affectedrows = await cnn.ExecuteAsync("DELETE FROM Solicitacao WHERE Id = @Id", new { Id = id });
-                await cnn.CloseAsync();
-                return (affectedrows > 0);
+                using (var cnn = SimpleDbConnection())
+                {
+                    await cnn.OpenAsync();
+                    var affectedrows = await cnn.ExecuteAsync("DELETE FROM Solicitacao WHERE Id = @Id", new { Id = id });
+                    await cnn.CloseAsync();
+                    retorno = (affectedrows > 0);
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error no JSON Excluir {e}");
+            }
+            return retorno;
         }
 
-        public async Task Incluir(dynamic json)
+        public async ValueTask Incluir(dynamic json)
         {
             try
             {
@@ -107,7 +115,7 @@ namespace Portabilidade.Infra.Repository
             }
         }
 
-        async Task<IEnumerable<Solicitacao>> ISqliteRepository<Solicitacao>.Listar()
+        async ValueTask<IEnumerable<Solicitacao>> ISqliteRepository<Solicitacao>.Listar()
         {
             string query = "SELECT Solicitacao FROM Solicitacao ORDER BY Id";
             using (var cnn = SimpleDbConnection())
@@ -140,7 +148,7 @@ namespace Portabilidade.Infra.Repository
             }
         }
 
-        async Task<Solicitacao> ISqliteRepository<Solicitacao>.Obter(string id)
+        async ValueTask<Solicitacao> ISqliteRepository<Solicitacao>.Obter(string id)
         {
             Console.WriteLine("ID = " + id);
 

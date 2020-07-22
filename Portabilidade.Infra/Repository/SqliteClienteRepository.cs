@@ -35,7 +35,7 @@ namespace Portabilidade.Infra.Repository
             }
 
         }
-        public async Task Incluir(dynamic json)
+        public async ValueTask Incluir(dynamic json)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace Portabilidade.Infra.Repository
 
         }
 
-        async Task<Cliente> ISqliteRepository<Cliente>.Obter(string id)
+        async ValueTask<Cliente> ISqliteRepository<Cliente>.Obter(string id)
         {
             Console.WriteLine("ID = " + id);
 
@@ -96,20 +96,28 @@ namespace Portabilidade.Infra.Repository
             //return retorno;
         }
 
-        async Task<bool> ISqliteRepository<Cliente>.Excluir(string id)
+        async ValueTask<bool> ISqliteRepository<Cliente>.Excluir(string id)
         {
             Console.WriteLine("ID = " + id);
-
-            using (var cnn = SimpleDbConnection())
+            bool retorno = false;
+            try
             {
-                await cnn.OpenAsync();
-                var affectedrows = await cnn.ExecuteAsync("DELETE FROM cliente WHERE DocumentoCPF = @Id", new { Id = id });
-                await cnn.CloseAsync();
-                return (affectedrows > 0);
+                using (var cnn = SimpleDbConnection())
+                {
+                    await cnn.OpenAsync();
+                    var affectedrows = await cnn.ExecuteAsync("DELETE FROM cliente WHERE DocumentoCPF = @Id", new { Id = id });
+                    await cnn.CloseAsync();
+                    retorno = (affectedrows > 0);
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error no JSON Excluir {e}");
+            }
+            return retorno;
         }
 
-        async Task<IEnumerable<Cliente>> ISqliteRepository<Cliente>.Listar()
+        async ValueTask<IEnumerable<Cliente>> ISqliteRepository<Cliente>.Listar()
         {
             string query = "SELECT * FROM cliente ORDER BY Nome";
             using (var cnn = SimpleDbConnection())

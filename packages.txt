@@ -14,12 +14,14 @@ dentro da Portabilidade.UI
 
 dotnet add package Swashbuckle.AspNetCore -v 5.5.1
 
-
 //---------------------
-Novas Implementações
+01/07/2020
 
 dotnet add package Microsoft.Data.SQLite --version 3.1.5
 
 dotnet add package Dapper --version 2.0.35
 
 
+//---------------------
+20/07/2020
+dotnet add package Swashbuckle.AspNetCore.Annotations

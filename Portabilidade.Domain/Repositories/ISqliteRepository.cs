@@ -6,10 +6,10 @@ namespace Portabilidade.Domain.Repositories
     public interface ISqliteRepository<T>
     {
         void CriarTabela();
-        Task Incluir(dynamic json);
-        Task<bool> Excluir(string id);
-        Task<T> Obter(string id);
-        Task<IEnumerable<T>> Listar();
+        ValueTask Incluir(dynamic json);
+        ValueTask<bool> Excluir(string id);
+        ValueTask<T> Obter(string id);
+        ValueTask<IEnumerable<T>> Listar();
 
     }
 }
