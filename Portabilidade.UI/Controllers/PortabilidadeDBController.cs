@@ -1,9 +1,9 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Portabilidade.Domain.Entities;
 using Portabilidade.Domain.Repositories;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Threading.Tasks;
 
 namespace Portabilidade.UI.Controllers
 {
@@ -19,7 +19,7 @@ namespace Portabilidade.UI.Controllers
         //Incluir e Alterar
         [HttpPost("v2/portabilidade/cliente")]
         [SwaggerOperation(
-            Summary = "Incluir uma novo cliente",            
+            Summary = "Incluir uma novo cliente",
             Tags = new[] { "Nova Cliente" }
             )]
         public async Task<IActionResult> Incluir([FromBody] dynamic json)
@@ -32,20 +32,20 @@ namespace Portabilidade.UI.Controllers
         //Listar 
         [HttpGet("v2/portabilidade/cliente")]
         [SwaggerOperation(
-            Summary = "Listar clientes cadastrados",            
+            Summary = "Listar clientes cadastrados",
             Tags = new[] { "Listar Clientes" }
             )]
         public async Task<IActionResult> Listar()
         {
             var Clientes = await _cliente.Listar();
-            string result = JsonConvert.SerializeObject(Clientes, Formatting.Indented);            
+            string result = JsonConvert.SerializeObject(Clientes, Formatting.Indented);
             return Ok(result);
         }
 
         //Trazer uma Especifica
         [HttpGet("v2/portabilidade/cliente/{id}")]
         [SwaggerOperation(
-            Summary = "Obter um cliente especifico",            
+            Summary = "Obter um cliente especifico",
             Tags = new[] { "Obter Cliente" }
             )]
         public async Task<IActionResult> ObterPorId(string id)
@@ -59,13 +59,13 @@ namespace Portabilidade.UI.Controllers
         //Excluir
         [HttpDelete("v2/portabilidade/cliente/{id}")]
         [SwaggerOperation(
-            Summary = "Remover um cliente especifico",            
+            Summary = "Remover um cliente especifico",
             Tags = new[] { "Excluir Cliente" }
             )]
         public async Task<IActionResult> Remover(string id)
         {
             string _id = System.Net.WebUtility.UrlDecode(id);
-            bool TrueOrFalse = await _cliente.Excluir(_id);                       
+            bool TrueOrFalse = await _cliente.Excluir(_id);
             return Ok(TrueOrFalse ? "Cliente Excluido Corretamente" : "Cliente Não Localizado");
         }
 

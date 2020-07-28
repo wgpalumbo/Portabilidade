@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Portabilidade.Domain.Entities;
+using Portabilidade.Service.Util;
 
 namespace Portabilidade.Tests.Entities
 {
@@ -8,14 +9,23 @@ namespace Portabilidade.Tests.Entities
     public class ClienteTests : AbstractValidator<Cliente>
     {
 
+        private ClienteValidator validator;
+        
+
+        [TestInitialize]
+        public void Init()
+        {
+            validator = new ClienteValidator();
+        }
+
         [DataTestMethod]
         [DataRow("179.506.820-51")]     //CPF valido
         [DataRow("42.630.193/0001-04")] //CNPJ valido
         public void RetornaTrueQuandoClienteIsValid(string doc)
         {
             var cliente = new Cliente("Nome Cliente PF", doc, "Endereço Cliente Maior que 20");
-            var validator = new ClienteValidator();
             var validRes = validator.Validate(cliente);
+
 
             Assert.IsTrue(validRes.IsValid);
         }
@@ -25,7 +35,6 @@ namespace Portabilidade.Tests.Entities
         {
             //Nome = NULL or Empty
             var cliente = new Cliente("", "179.506.820-51", "Endereço Cliente Maior que 20");
-            var validator = new ClienteValidator();
             var validRes = validator.Validate(cliente);
             Assert.IsFalse(validRes.IsValid);
         }
@@ -35,7 +44,6 @@ namespace Portabilidade.Tests.Entities
         {
             //Endereco menor que 20 caracteres
             var cliente = new Cliente("Nome Cliente", "179.506.820-51", "Endereço Cliente");
-            var validator = new ClienteValidator();
             var validRes = validator.Validate(cliente);
             Assert.IsFalse(validRes.IsValid);
         }
@@ -48,7 +56,6 @@ namespace Portabilidade.Tests.Entities
         {
             //DocumentoCPF is Null or Empty
             var cliente = new Cliente("Nome Cliente", cpf, "Endereço Cliente Maior que 20");
-            var validator = new ClienteValidator();
             var validRes = validator.Validate(cliente);
 
             Assert.IsFalse(validRes.IsValid);

@@ -1,4 +1,3 @@
-using System;
 using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Portabilidade.Domain.Entities;
@@ -35,7 +34,7 @@ namespace Portabilidade.Tests.Entities
 
             Assert.IsFalse(validRes.IsValid || validRes1.IsValid || validRes2.IsValid);
         }
-        
+
 
     }
 }

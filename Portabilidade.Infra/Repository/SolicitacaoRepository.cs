@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Portabilidade.Domain.Entities;
-
 namespace Portabilidade.Domain.Repositories
 {
     // public class SolicitacaoRepository : ISolicitacaoRepository

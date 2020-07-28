@@ -1,7 +1,8 @@
-using System;
 using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Portabilidade.Domain.Entities;
+using Portabilidade.Service.Util;
+using System;
 
 namespace Portabilidade.Tests.Entities
 {
@@ -14,6 +15,15 @@ namespace Portabilidade.Tests.Entities
         private Agente agenteCedente = new Agente("820-6 BB-BI", "12345678");
         private Agente agenteCessionario = new Agente("XP INVESTIMENTOS CCTVM S.A. MATRIZ 3-5", "87654321");
         private Ativo ativo = new Ativo("BBSA3", "Ações", 100);
+
+        
+        private SolicitacaoValidator validator;
+
+        [TestInitialize]
+        public void Init()
+        {
+            validator = new SolicitacaoValidator();
+        }
 
         [TestCleanup]
         public void Finalizando()
@@ -35,8 +45,6 @@ namespace Portabilidade.Tests.Entities
                                               cliente,
                                               10);
             solicitacao.AdicionarAtivo(ativo);
-
-            var validator = new SolicitacaoValidator();
             var validRes = validator.Validate(solicitacao);
             Assert.IsTrue(validRes.IsValid);
         }
@@ -51,8 +59,7 @@ namespace Portabilidade.Tests.Entities
                                               agenteCessionario,
                                               cliente,
                                               10);
-            solicitacao.AdicionarAtivo(ativo);
-            var validator = new SolicitacaoValidator();
+            solicitacao.AdicionarAtivo(ativo);            
             var validRes = validator.Validate(solicitacao);
 
             var agenteCedente2 = new Agente("820-6 BB-BI", "");
@@ -62,8 +69,7 @@ namespace Portabilidade.Tests.Entities
                                              agenteCessionario,
                                              cliente,
                                              10);
-            solicitacao.AdicionarAtivo(ativo);
-            validator = new SolicitacaoValidator();
+            solicitacao.AdicionarAtivo(ativo);            
             var validRes2 = validator.Validate(solicitacao);
 
             Assert.IsFalse(validRes.IsValid || validRes2.IsValid);
@@ -80,8 +86,7 @@ namespace Portabilidade.Tests.Entities
                                                 agenteCessionario1,
                                                 cliente,
                                                 10);
-            solicitacao.AdicionarAtivo(ativo);
-            var validator = new SolicitacaoValidator();
+            solicitacao.AdicionarAtivo(ativo);            
             var validRes = validator.Validate(solicitacao);
 
             var agenteCessionario2 = new Agente("XP INVESTIMENTOS CCTVM S.A. MATRIZ 3-5", "");
@@ -91,8 +96,7 @@ namespace Portabilidade.Tests.Entities
                                               agenteCessionario2,
                                               cliente,
                                               10);
-            solicitacao.AdicionarAtivo(ativo);
-            validator = new SolicitacaoValidator();
+            solicitacao.AdicionarAtivo(ativo);           
             var validRes2 = validator.Validate(solicitacao);
 
             Assert.IsFalse(validRes.IsValid || validRes2.IsValid);
@@ -110,8 +114,7 @@ namespace Portabilidade.Tests.Entities
                                               cliente,
                                               10);
             //solicitacao.AdicionarAtivo(ativo);
-
-            var validator = new SolicitacaoValidator();
+            
             var validRes = validator.Validate(solicitacao);
             Assert.IsFalse(validRes.IsValid);
         }
@@ -127,8 +130,7 @@ namespace Portabilidade.Tests.Entities
                                               cliente,
                                               0);
             solicitacao.AdicionarAtivo(ativo);
-
-            var validator = new SolicitacaoValidator();
+          
             var validRes = validator.Validate(solicitacao);
             Assert.IsFalse(validRes.IsValid);
         }

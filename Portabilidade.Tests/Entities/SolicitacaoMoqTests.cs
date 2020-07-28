@@ -1,13 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Newtonsoft.Json.Linq;
 using Portabilidade.Domain.Entities;
 using Portabilidade.Domain.Repositories;
+using Portabilidade.Infra.Repository;
 using Portabilidade.Service.Util;
-using Portabilidade.UI.Controllers;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using System.Configuration;
 
 namespace Portabilidade.Tests.Entities
 {
@@ -15,7 +17,7 @@ namespace Portabilidade.Tests.Entities
     [TestClass]
     public class SolicitacaoMoqTests
     {
-        private Mock<ISqliteRepository<Solicitacao>> mock;
+        private ISqliteRepository<Solicitacao> mock;
 
         private string CPF_INVALIDO = "179.506.820-99";
         private string CPF_VALIDO = "179.506.820-51";
@@ -27,38 +29,19 @@ namespace Portabilidade.Tests.Entities
         private Ativo ativo1 = new Ativo("BBSA3", "Ações", 100);
         private Ativo ativo2 = new Ativo("IPCA+", "Titulo do Tesouro", 300);
 
+
+        private static Guid localGuid;
+
+        [ClassInitialize]
+        public static void ClassSetup(TestContext a)
+        {
+            localGuid = Guid.NewGuid();
+        }
+
         [TestInitialize]
         public void InicializarMockObject()
         {
-            mock = new Mock<ISqliteRepository<Solicitacao>>(MockBehavior.Default);
-
-            mock.Setup(s => s.Incluir(It.IsAny<Solicitacao>())).Returns((new ValueTask()));
-
-            mock.Setup(s => s.Excluir(It.IsAny<string>())).Returns((new ValueTask<bool>(true)));
-
-            Cliente clientePF_CPF_Valido = new Cliente("Nome Cliente PF", CPF_VALIDO, "Endereço Cliente Maior que 20");
-            var solicitacao = new Solicitacao(Guid.Parse("906d319a-2f3a-4fc4-91aa-ed9699da2b54"),
-                                                          Convert.ToDateTime("01/07/2020"),
-                                                          agenteCedente,
-                                                          agenteCessionario,
-                                                          clientePF_CPF_Valido,
-                                                          10);
-            solicitacao.AdicionarAtivo(ativo1);
-            solicitacao.AdicionarAtivo(ativo2);
-
-            mock.Setup(s => s.Obter(It.IsAny<string>())).Returns(new ValueTask<Solicitacao>(solicitacao));
-
-
-            List<Solicitacao> _local_storage = new List<Solicitacao>();
-            _local_storage.Add(solicitacao);
-
-            mock.Setup(s => s.Listar()).Returns(new ValueTask<IEnumerable<Solicitacao>>(_local_storage));
-
-            clientePF_CPF_Valido = null;
-            solicitacao = null;
-            _local_storage = null;
-
-
+            mock = new SqliteSolicitacaoRepository();
         }
 
         [TestCleanup]
@@ -125,11 +108,11 @@ namespace Portabilidade.Tests.Entities
         }
 
         [TestMethod]
-        public void Testar_Incluir_Excluir_Solicitacao()
+        public void Testar_Incluir_Solicitacao()
         {
-            //Arrange
+            //Arrange           
             Cliente clientePF_CPF_Valido = new Cliente("Nome Cliente PF", CPF_VALIDO, "Endereço Cliente Maior que 20");
-            var localGuid = Guid.NewGuid();
+            //var localGuid = Guid.NewGuid();
             var solicitacao = new Solicitacao(localGuid,
                                                           Convert.ToDateTime("01/07/2020"),
                                                           agenteCedente,
@@ -139,38 +122,82 @@ namespace Portabilidade.Tests.Entities
             solicitacao.AdicionarAtivo(ativo1);
             solicitacao.AdicionarAtivo(ativo2);
 
-            //Act
-            mock.Object.Incluir(solicitacao);
-            mock.Object.Excluir(Convert.ToString(localGuid));
-            var resultadoMock = mock.Object.Obter(Convert.ToString(Guid.Parse("906d319a-2f3a-4fc4-91aa-ed9699da2b54")));
-            var listaMock = mock.Object.Listar();
+            string solicitacaoRetorno = "{'codigoInternoSolicitacao':'" + Convert.ToString(localGuid) + "','dataTransferencia':'2020-07-01T00:00:00','agenteCedente':{'instituicao':'BB BANCO DE INVESTIMENTO S/A - 820','codigoInvestidor':'AA123456'},'agenteCessionario':{'instituicao':'BANK OF AMERICA MERRILL LYNCH - 1817','codigoInvestidor':'13579'},'cliente':{'nome':'Nome Cliente','documentoCpf':'179.506.820-51','endereco':'Endereço Cliente Maior que 20'},'motivo':10,'ativos':[{'codigo':'PETR4','tipo':'Ações','quantidade':100.0},{'codigo':'Debênture','tipo':'Debênture','quantidade':200.0}]}";
 
-            //Assert
-            mock.Verify();
+            //Act
+            bool success = mock.Incluir(JObject.Parse(solicitacaoRetorno)).IsCompletedSuccessfully;
+            //mock.Incluir(JObject.Parse(solicitacaoRetorno));
+
+            //Assert            
+            Assert.IsTrue(success);
         }
 
         [TestMethod]
-        public void Testar_Obter_Solicitacao_Controller()
+        public void Testar_Obter_Solicitacao()
         {
-            //Arrange               
-            var controller = new PortabilidadeController(mock.Object);
+            //Arrange                                
+            Cliente clientePF_CPF_Valido = new Cliente("Nome Cliente PF", CPF_VALIDO, "Endereço Cliente Maior que 20");
+            //string solicitacaoRetorno = "{'CodigoInternoSolicitacao':'906d319a-2f3a-4fc4-91aa-ed9699da2b54','DataTransferencia':'2020-07-01T00:00:00','AgenteCedente':{'Instituicao':'BB BANCO DE INVESTIMENTO S/A - 820','CodigoInvestidor':'AA123456'},'AgenteCessionario':{'Instituicao':'BANK OF AMERICA MERRILL LYNCH - 1817','CodigoInvestidor':'13579'},'Cliente':{'Nome':'Nome Cliente','DocumentoCpf':'179.506.820-51','Endereco':'Endereço Cliente Maior que 20'},'Motivo':10,'Ativos':[{'Codigo':'PETR4','Tipo':'Ações','Quantidade':100.0},{'Codigo':'Debênture','Tipo':'Debênture','Quantidade':200.0}]}";
 
-            //Act            
-            var resultadoMockController = controller.ObterPorId(Convert.ToString(Guid.Parse("906d319a-2f3a-4fc4-91aa-ed9699da2b54")));
-            var listagemMockController = controller.Listar();
-            var result = listagemMockController.Result as OkObjectResult;
+            var solicitacao = new Solicitacao(Guid.Parse("906d319a-2f3a-4fc4-91aa-ed9699da2b54"),
+                                                          Convert.ToDateTime("01/07/2020"),
+                                                          agenteCedente,
+                                                          agenteCessionario,
+                                                          clientePF_CPF_Valido,
+                                                          10);
+            solicitacao.AdicionarAtivo(ativo1);
+            solicitacao.AdicionarAtivo(ativo2);
+
+            var mockVirtual = new Mock<ISqliteRepository<Solicitacao>>();
+            mockVirtual.Setup(s => s.Obter(It.IsAny<string>())).Returns(new ValueTask<Solicitacao>(solicitacao));
+
+            //Act      
+            var resultadoObtido = mock.Obter("906d319a-2f3a-4fc4-91aa-ed9699da2b54");
+            var resultadoEsperado = mockVirtual.Object.Obter(Convert.ToString(localGuid));
 
             //Assert            
-            Assert.IsNotNull(resultadoMockController);
-            Assert.IsNotNull(listagemMockController);
-            Assert.IsInstanceOfType(resultadoMockController, typeof(Task<IActionResult>));
-            Assert.IsInstanceOfType(listagemMockController, typeof(Task<IActionResult>));
-            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
-            Assert.AreEqual(1, resultadoMockController.Id);
-            Assert.AreEqual(2, listagemMockController.Id);
+            Assert.AreEqual(resultadoObtido.ToString(), resultadoEsperado.ToString());
 
         }
 
+        [TestMethod]
+        public void Testar_Excluir_Solicitacao()
+        {
+
+            //Act
+            bool success = mock.Excluir(Convert.ToString(localGuid)).IsCompletedSuccessfully;
+            //mock.Excluir(Convert.ToString(localGuid));
+
+            //Assert            
+            Assert.IsTrue(success);
+
+        }
+
+        [TestMethod]
+        public void Testar_Listar_Solicitacao()
+        {
+            //Arrange
+            Cliente clientePF_CPF_Valido = new Cliente("Nome Cliente PF", CPF_VALIDO, "Endereço Cliente Maior que 20");
+            var solicitacao = new Solicitacao(Guid.Parse("906d319a-2f3a-4fc4-91aa-ed9699da2b54"),
+                                                          Convert.ToDateTime("01/07/2020"),
+                                                          agenteCedente,
+                                                          agenteCessionario,
+                                                          clientePF_CPF_Valido,
+                                                          10);
+            solicitacao.AdicionarAtivo(ativo1);
+            solicitacao.AdicionarAtivo(ativo2);
+
+            List<Solicitacao> _local_lista = new List<Solicitacao>();
+            _local_lista.Add(solicitacao);
+            string codigoSolicitacaoVirtual = Convert.ToString(_local_lista[0].CodigoInternoSolicitacao);
+
+            //Act            
+            List<Solicitacao> listaMock = new List<Solicitacao>((mock.Listar()).Result);
+            string codigoSolicitacaoReal = Convert.ToString(listaMock[0].CodigoInternoSolicitacao);
+            
+            //Assert  
+            Assert.AreEqual(codigoSolicitacaoVirtual, codigoSolicitacaoReal);
+        }
 
     }
 }

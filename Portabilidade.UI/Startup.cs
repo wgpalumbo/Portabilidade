@@ -23,13 +23,30 @@ namespace Portabilidade.UI
                 //options.KnownProxies.Add(System.Net.IPAddress.Parse("192.168.1.13"));
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
-            services.Add(new ServiceDescriptor(typeof(ISqliteRepository<Solicitacao>), typeof(SqliteSolicitacaoRepository), ServiceLifetime.Transient));
-            services.Add(new ServiceDescriptor(typeof(ISqliteRepository<Cliente>), typeof(SqliteClienteRepository), ServiceLifetime.Transient));
-            services.Add(new ServiceDescriptor(typeof(IValidarStrategy), typeof(ValidarCnpj), ServiceLifetime.Transient));
-            services.Add(new ServiceDescriptor(typeof(IValidarStrategy), typeof(ValidarCpf), ServiceLifetime.Transient));
+
+            // services.Add(new ServiceDescriptor(typeof(ISqliteRepository<Solicitacao>), typeof(SqliteSolicitacaoRepository), ServiceLifetime.Transient));
+            // services.Add(new ServiceDescriptor(typeof(ISqliteRepository<Cliente>), typeof(SqliteClienteRepository), ServiceLifetime.Transient));
+            // services.Add(new ServiceDescriptor(typeof(IValidarStrategy), typeof(ValidarCnpj), ServiceLifetime.Transient));
+            // services.Add(new ServiceDescriptor(typeof(IValidarStrategy), typeof(ValidarCpf), ServiceLifetime.Transient));
+            // services.Add(new ServiceDescriptor(typeof(IQualValidador), typeof(QualValidador), ServiceLifetime.Transient));
+
+            services.AddScoped<ISqliteRepository<Solicitacao>, SqliteSolicitacaoRepository>();
+            services.AddScoped<ISqliteRepository<Cliente>, SqliteClienteRepository>();
+
+            //services.AddTransient<IClienteValidator, ClienteValidator>();
+
+            services.AddTransient<IQualValidar, QualValidar>();
+
+            services.AddTransient<IValidarStrategy, ValidarCnpj>();
+            services.AddTransient<IValidarStrategy, ValidarCpf>();
+
+            //services.AddTransient<IValidarStrategy, ValidarCnpj>(p => p.GetService<ValidarCnpj>());
+            //services.AddTransient<IValidarStrategy, ValidarCpf>(p => p.GetService<ValidarCpf>());
+
+            //services.AddTransient<IValidarStrategy, ValidarCpf>(p => p.GetService<ValidarCpf>());
 
             services.AddSwaggerGen(c => { c.EnableAnnotations(); });
-            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

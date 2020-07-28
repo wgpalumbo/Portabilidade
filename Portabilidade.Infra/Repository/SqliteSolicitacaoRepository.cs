@@ -1,21 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Threading.Tasks;
 using Dapper;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Portabilidade.Domain.Entities;
 using Portabilidade.Domain.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace Portabilidade.Infra.Repository
 {
     public sealed class SqliteSolicitacaoRepository : SqliteBaseRepository, ISqliteRepository<Solicitacao>
     {
+
+        public SqliteSolicitacaoRepository()
+        {
+        }
+
         public void CriarTabela()
         {
-            if (File.Exists(DbFile))
+            //if (File.Exists(DbFile))
             {
                 using (IDbConnection cnn = SimpleDbConnection())
                 {
@@ -48,29 +52,36 @@ namespace Portabilidade.Infra.Repository
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error no JSON Excluir {e}");
+                Console.WriteLine("DEU ERRO");
+                Console.WriteLine(e.Message);
+                throw e;
             }
             return retorno;
         }
 
         public async ValueTask Incluir(dynamic json)
         {
+
             try
             {
                 string jsonString = Convert.ToString(json);
                 dynamic data = JObject.Parse(jsonString);
+                Console.WriteLine("OPAOPA = 1 " + jsonString);
                 //------------
-                Console.WriteLine(data.agenteCedente.instituicao);
-                Console.WriteLine(data.agenteCedente.codigoInvestidor);
-                Console.WriteLine(data.agenteCessionario.instituicao);
-                Console.WriteLine(data.agenteCessionario.codigoInvestidor);
+                Console.WriteLine(data.codigoInternoSolicitacao);
                 //Verificando Campo Cliente                
                 Cliente cliente = new Cliente(Convert.ToString(data.cliente.nome), Convert.ToString(data.cliente.documentoCpf), Convert.ToString(data.cliente.endereco));
                 Agente agenteCedente = new Agente(Convert.ToString(data.agenteCedente.instituicao), Convert.ToString(data.agenteCedente.codigoInvestidor));
                 Agente agenteCessionario = new Agente(Convert.ToString(data.agenteCessionario.instituicao), Convert.ToString(data.agenteCessionario.codigoInvestidor));
                 //------------
-                //Verificando Campo Solicitacao
+                //Verificando Campo Guid
                 Guid _guid = Guid.NewGuid();
+                if (Guid.TryParse(Convert.ToString(data.codigoInternoSolicitacao), out Guid testeguid))
+                {
+                    _guid = new Guid(Convert.ToString(data.codigoInternoSolicitacao));
+                    Console.WriteLine("OPAOPA = Parse Guid " + Convert.ToString(data.codigoInternoSolicitacao));
+                }
+                //------------
                 var solicitacao = new Solicitacao(_guid,
                                                               Convert.ToDateTime("01/07/2020"),
                                                               agenteCedente,
@@ -111,7 +122,8 @@ namespace Portabilidade.Infra.Repository
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error no JSON Input {e}");
+                Console.WriteLine("DEU ERRO " + e.Message.ToString());
+                throw e;
             }
         }
 

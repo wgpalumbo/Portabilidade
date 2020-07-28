@@ -1,16 +1,17 @@
-﻿using System;
+﻿using Microsoft.Data.Sqlite;
 using System.IO;
-using Microsoft.Data.Sqlite;
 
 namespace Portabilidade.Infra.Repository
 {
     public class SqliteBaseRepository
     {
-        public static string DbFile
+        protected string GetDbFile()
         {
-            get { return Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\Portabilidade.Infra\Data\Portabilidade.sqlite")); }
+            string localDB = "C:/netcorefontes/PortabilidadeContext/Portabilidade.Infra/Data/Portabilidade.sqlite";
+            //return Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @"..\Portabilidade.Infra\Data\Portabilidade.sqlite")); 
+            return localDB;
         }
 
-        public static SqliteConnection SimpleDbConnection() => new SqliteConnection("Data Source=" + DbFile);
+        protected SqliteConnection SimpleDbConnection() => new SqliteConnection("Data Source=" + GetDbFile());
     }
 }

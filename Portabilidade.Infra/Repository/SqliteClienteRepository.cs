@@ -1,23 +1,28 @@
+using Dapper;
+using Newtonsoft.Json.Linq;
+using Portabilidade.Domain.Entities;
+using Portabilidade.Domain.Repositories;
+using Portabilidade.Service.Util;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
-using Newtonsoft.Json.Linq;
-using Portabilidade.Domain.Entities;
-using Portabilidade.Domain.Repositories;
-using Portabilidade.Service.Util;
 
 namespace Portabilidade.Infra.Repository
 {
     public sealed class SqliteClienteRepository : SqliteBaseRepository, ISqliteRepository<Cliente>
     {
+        private readonly IQualValidar validarDocumento;
+        public SqliteClienteRepository(IQualValidar _validarDocumento)
+        {
+            validarDocumento = _validarDocumento;
+        }
 
         public void CriarTabela()
         {
-            if (File.Exists(DbFile))
+            //if (File.Exists(DbFile))
             {
                 using (IDbConnection cnn = SimpleDbConnection())
                 {

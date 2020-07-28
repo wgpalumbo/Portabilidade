@@ -1,11 +1,9 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Portabilidade.Domain.Entities;
 using Portabilidade.Domain.Repositories;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Threading.Tasks;
 
 namespace Portabilidade.UI.Controllers
 {
@@ -22,7 +20,7 @@ namespace Portabilidade.UI.Controllers
         //Incluir
         [HttpPost("v1/portabilidade")]
         [SwaggerOperation(
-            Summary = "Incluir uma nova solicitação",            
+            Summary = "Incluir uma nova solicitação",
             Tags = new[] { "Nova Solicitação" }
             )]
         public async Task<IActionResult> Incluir([FromBody] dynamic json)
@@ -34,7 +32,7 @@ namespace Portabilidade.UI.Controllers
         //Listar 
         [HttpGet("v1/portabilidade")]
         [SwaggerOperation(
-            Summary = "Listar solicitações cadastradas",            
+            Summary = "Listar solicitações cadastradas",
             Tags = new[] { "Listar Solicitações" }
             )]
         //[Produces("application/json")]
@@ -48,7 +46,7 @@ namespace Portabilidade.UI.Controllers
         //Trazer uma Especifica
         [HttpGet("v1/portabilidade/{id}")]
         [SwaggerOperation(
-            Summary = "Obter uma solicitação especifica",            
+            Summary = "Obter uma solicitação especifica",
             Tags = new[] { "Obter Solicitação" }
             )]
         public async Task<IActionResult> ObterPorId(string id)
@@ -62,7 +60,7 @@ namespace Portabilidade.UI.Controllers
         //Excluir
         [HttpDelete("v1/portabilidade/{id}")]
         [SwaggerOperation(
-            Summary = "Remover uma solicitação especifica",            
+            Summary = "Remover uma solicitação especifica",
             Tags = new[] { "Excluir Solicitação" }
             )]
         public async Task<IActionResult> Remover(string id)

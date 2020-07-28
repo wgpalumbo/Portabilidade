@@ -52,7 +52,7 @@ namespace Portabilidade.Service.Util
 
                 retorno = (cnpj.EndsWith(digito));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("{0} Exception caught.", e);
             }
@@ -82,7 +82,7 @@ namespace Portabilidade.Service.Util
 
                 retorno = (cnpjInvalidos.Contains(numero));
             }
-           catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("{0} Exception caught.", e);
             }

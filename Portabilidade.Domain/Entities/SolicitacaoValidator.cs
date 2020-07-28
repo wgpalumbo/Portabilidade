@@ -1,5 +1,5 @@
-using System;
 using FluentValidation;
+using Portabilidade.Service.Util;
 using PortabilidadeContext.Portabilidade.Domain.Enums;
 
 namespace Portabilidade.Domain.Entities
